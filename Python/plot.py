@@ -6,10 +6,12 @@ def ploting(filepath, fig):
     ch1 = []
     ch2 = []
     ch3 = []
+    string = []
     enable = False
     for line in lines:
         if (enable):
             data = line.split(',')
+            #print(data)
             time.append(float(data[0])*100000000)
             ch1.append((float(data[1])))
             ch2.append((float(data[2])))
@@ -18,8 +20,9 @@ def ploting(filepath, fig):
         if line.startswith('TIME'):
             enable = True
     #debug
+    #print(string)
     # print(time)
-    # print(ch1)
+    print(ch1)
     # print(len(ch2))
     # print(len(ch3))
 
