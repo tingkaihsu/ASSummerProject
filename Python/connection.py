@@ -5,10 +5,9 @@ import time
 def send_data(data):
     time.sleep(0.1)
     ser.write(data.encode())  # Convert string to bytes and send
-    #mes = ser.readline(64)
-    #if mes:
-    #    print(data)
-    #    print(mes.decode())
+    mes = ser.readline(64)
+    if mes != b'':
+        print(mes.decode())
 
 # Function to receive data
 def receive_data():
@@ -41,21 +40,31 @@ print(ser)
 # send_data(chr(0x14))
 send_data('\x14')
 send_data('\x11')
-# remember to add \r\n in front of the commend
-send_data('\r\nCLEA')
-send_data('\r\n*IDN?')
-send_data('\r\nSTAR')
-print(receive_data())
+# remember to add \r\n in sandwich form of the commend
+send_data('\r\nCLEA\r\n')
+send_data('\r\nEVTS\r\n')
+send_data('\r\n*IDN?\r\n')
 # It seems that the commend would first be stored in  buffer
 # and then be pushed to machine when the other commend comes in
-send_data('\r\nCOUN?')
-time.sleep(30.0)
-send_data('\r\nTIME?')
-print(receive_data())
-send_data('\r\nSTOP')
-
-print(receive_data())
-
+events = 0
+pre_events = 0
+while(1):
+    #commend = input('Please enter commend: ')
+    #commend = '\r\n' + commend + '\r\n'
+    #send_data(commend)
+    #if commend == '\r\nSTOP\r\n':
+    #    break
+    send_data('\r\nSTAR\r\n')
+    # COUNTER
+    time.sleep(0.1)
+    ser.write('\r\nEVTS?\r\n'.encode())
+    events = int(ser.readline(64).decode())
+    if events != pre_events:
+        #time.sleep(0.1)
+        #ser.write('\r\nSTOP\r\n'.encode())
+        send_data('\r\nCOUN?\r\n')
+        pre_events = events
+        send_data('\r\nCLEA\r\n')
 send_data(chr(0x12))
 print(ser)
 ser.close()
