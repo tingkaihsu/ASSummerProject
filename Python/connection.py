@@ -1,5 +1,6 @@
 import serial
 import time
+import keyboard
 
 # Function to send data
 def send_data(data):
@@ -19,7 +20,7 @@ def receive_data():
 
 # Set up the serial connection
 ser = serial.Serial(
-    port='/dev/ttyUSB1',  # Device name
+    port='/dev/ttyUSB0',  # Device name
     baudrate=9600,        # Baud rate (this depends on your device)
     timeout=1             # Timeout for read
 )
@@ -48,23 +49,28 @@ send_data('\r\n*IDN?\r\n')
 # and then be pushed to machine when the other commend comes in
 events = 0
 pre_events = 0
-while(1):
-    #commend = input('Please enter commend: ')
-    #commend = '\r\n' + commend + '\r\n'
-    #send_data(commend)
-    #if commend == '\r\nSTOP\r\n':
-    #    break
-    send_data('\r\nSTAR\r\n')
-    # COUNTER
-    time.sleep(0.1)
-    ser.write('\r\nEVTS?\r\n'.encode())
-    events = int(ser.readline(64).decode())
-    if events != pre_events:
-        #time.sleep(0.1)
-        #ser.write('\r\nSTOP\r\n'.encode())
-        send_data('\r\nCOUN?\r\n')
-        pre_events = events
-        send_data('\r\nCLEA\r\n')
-send_data(chr(0x12))
-print(ser)
-ser.close()
+try: 
+    while(True):
+        #commend = input('Please enter commend: ')
+        #commend = '\r\n' + commend + '\r\n'
+        #send_data(commend)
+        #if commend == '\r\nSTOP\r\n':
+        #    break
+        send_data('\r\nSTAR\r\n')
+        # COUNTER
+        time.sleep(0.1)
+        ser.write('\r\nEVTS?\r\n'.encode())
+        events = int(ser.readline(64).decode())
+        if events != pre_events:
+            print('Event: ', events)
+            send_data('\r\nCOUN?\r\n')
+            pre_events = events
+            send_data('\r\nCLEA\r\n')
+except KeyboardInterrupt:
+        print('\nKeyboard interrupt!')
+finally:
+    send_data('\r\nSTOP\r\n')
+    send_data(chr(0x13))
+    send_data(chr(0x12))
+    print(ser)
+    ser.close()
