@@ -3,7 +3,7 @@ import time
 
 # Function to send data
 def send_data(data):
-    time.sleep(0.1)
+    # time.sleep(0.1)
     ser.write(data.encode())  # Convert string to bytes and send
     mes = ser.readline(64)
     if mes != b'':
@@ -45,15 +45,16 @@ try:
     while(True):
         send_data('\r\nSTAR\r\n')
         # COUNTER
-        time.sleep(0.1)
-        ser.write('\r\nEVTS?\r\n'.encode())
-        events = int(ser.readline(64).decode())
-        if events != pre_events:
-            print('Event: ', events)
-            send_data('\r\nCOUN?\r\n')
-            pre_events = events
-            send_data('\r\nCLEA\r\n')
-            print('start counting!')
+        # time.sleep(0.1)
+        # ser.write('\r\nEVTS?\r\n'.encode())
+        # events = int(ser.readline(64).decode())
+        # if events != pre_events:
+        #     print('Event: ', events)
+        #     send_data('\r\nCOUN?\r\n')
+        #     pre_events = events
+        #     send_data('\r\nCLEA\r\n')
+        #     print('start counting!')
+        send_data('\r\nCOUN?\r\n')
 except KeyboardInterrupt:
         print('\nKeyboard interrupt!')
 finally:
