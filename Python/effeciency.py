@@ -45,20 +45,20 @@ try:
     while(True):
         send_data('\r\nSTAR\r\n')
         # COUNTER
-        # time.sleep(0.1)
-        # ser.write('\r\nEVTS?\r\n'.encode())
-        # events = int(ser.readline(64).decode())
-        # if events != pre_events:
-        #     print('Event: ', events)
-        #     send_data('\r\nCOUN?\r\n')
-        #     pre_events = events
-        #     send_data('\r\nCLEA\r\n')
-        #     print('start counting!')
-        send_data('\r\nCOUN?\r\n')
+        time.sleep(0.1)
+        ser.write('\r\nEVTS?\r\n'.encode())
+        events = int(ser.readline(64).decode())
+        if events != pre_events:
+            print('Event: ', events)
+            send_data('\r\nCOUN?\r\n')
+            pre_events = events
+            send_data('\r\nCLEA\r\n')
+            print('start counting!')
 except KeyboardInterrupt:
         print('\nKeyboard interrupt!')
 finally:
     send_data('\r\nSTOP\r\n')
+    send_data('\r\nCLEA\r\n')
     send_data(chr(0x13))
     send_data(chr(0x12))
     print(ser)
