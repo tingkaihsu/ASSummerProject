@@ -15,16 +15,10 @@ void test(const char* input_file, const char* output_file) {
     //Create a TFile to store the TTree
     TFile *file = new TFile(output_file, "RECREATE");
     TTree *tree = new TTree("tree", "Channel versus counter");
-    int ch1, ch2;
+    int ch1 = 0, ch2 = 1;
     tree->Branch("ch1", &ch1, "ch1/I");
     tree->Branch("ch2", &ch2, "ch2/I");
-    //getline(infile);
-    char chr1, chr2;
-    while(infile >> chr1 >> chr2) {
-        ch1 = int(chr1);
-        ch2 = int(chr2);
-        tree->Fill();
-    }
+    tree->Fill();
     file->Write();
     file->Close();
     
