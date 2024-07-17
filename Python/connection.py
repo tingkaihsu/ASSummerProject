@@ -5,15 +5,17 @@ import time
 def send_data(data):
     time.sleep(0.1)
     ser.write(data.encode())  # Convert string to bytes and send
-    mes = ser.readline(64)
-    if mes != b'':
-        print(mes.decode())
+    # mes = ser.readline(64)
+    # if mes != b'':
+    #     print(mes.decode())
 
 # Function to receive data
 def receive_data():
     data = ser.readline(64)  # Read a line of data
     return data.decode()   # Convert bytes to string and return
 
+# Set up writing file
+file = open("data.txt", "w")
 
 # Set up the serial connection
 ser = serial.Serial(
@@ -51,6 +53,14 @@ try:
         if events != pre_events:
             print('Event: ', events)
             send_data('\r\nCOUN?\r\n')
+            mes = receive_data()
+            if mes != '':
+                print(mes)
+                data = mes.split(";")
+                ch1 = data[0].split(",")
+                ch2 = data[1].split(",")
+                print(ch1[1], file= file, end = ' ')
+                print(ch2[1], file= file, end = '')
             pre_events = events
             send_data('\r\nCLEA\r\n')
             print('start counting!')
