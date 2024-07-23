@@ -64,12 +64,17 @@ try:
         #     pre_events = events
         #     send_data('\r\nCLEA\r\n')
         #     print('start counting!')
+<<<<<<< HEAD
         time.sleep(300.0)
+=======
+        time.sleep(600.0)
+>>>>>>> 1d4a6603a02200f54668af908dcd98f43a676cd9
         mes = send_data('\r\nCOUN?\r\n')
         if mes != '' and mes.startswith('1'):
             data = mes.split(";")
             ch1 = data[0].split(",")
             ch2 = data[1].split(",")
+            print("current time: ", time.time(), file=file)
             print(ch1[1], file= file, end = ' ')
             print(ch2[1], file= file, end = '')
 except KeyboardInterrupt:
@@ -82,6 +87,7 @@ except KeyboardInterrupt:
         print(ch1[1], file= file, end = ' ')
         print(ch2[1], file= file, end = '')
     send_data('\r\nSTOP\r\n')
+    print("current time: ", time.time(), file=file)
 finally:
     send_data(chr(0x13))
     send_data(chr(0x12))
