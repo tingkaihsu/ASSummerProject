@@ -16,7 +16,7 @@ def receive_data():
     return data.decode()   # Convert bytes to string and return
 
 # Set up writing file
-file = open("data.txt", "w")
+file = open("data1.txt", "w")
 
 # Set up the serial connection
 ser = serial.Serial(
@@ -64,7 +64,7 @@ try:
         #     pre_events = events
         #     send_data('\r\nCLEA\r\n')
         #     print('start counting!')
-        time.sleep(10.0)
+        time.sleep(300.0)
         mes = send_data('\r\nCOUN?\r\n')
         if mes != '' and mes.startswith('1'):
             data = mes.split(";")
