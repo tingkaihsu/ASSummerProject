@@ -24,7 +24,12 @@ public:
         }
         this->ch1 = stoi(ch1);
         this->ch2 = stoi(ch2);
-        this->eff = (float)this->ch2 / (float)this->ch1;
+        if (this->ch1 != 0) {
+            this->eff = (float)this->ch2 / (float)this->ch1;
+        }
+        else {
+            this->eff = 0;
+        }
         return;
     }
     int getch1() {
@@ -49,23 +54,33 @@ void ROOTRead() {
     string mystring;
     CHA arr[10000];
     int idx = -1;   //the first line is ch1 and ch2
-
+    int size = 0;
     while (getline(myfile, mystring)) {
         // cout << mystring << endl;
-        if (idx >= 0) {
-            arr[idx].getdata(mystring);
+        if (idx>=0) {
+            ++size;
+            arr[size].getdata(mystring);
             // cout << arr[idx].getch1() << " " << arr[idx].getch2() << endl;
         }
         ++idx;
     }
 
+    cout << size << endl;
     myfile.close();
 
-    TH1* h_eff = new TH1D("eff", "Histogram of Effeciency", 100,0.0,1.0);
-    
-    for (int i = 0; i < size(arr); ++i) {
-        h_eff->Fill(arr[i].geteff());
+    double eff[500];
+    double eves[500];
+    for (int i = 0; i < 500; ++i) {
+        // cout << arr[i].geteff() << endl;
+        eff[i] = arr[i].geteff();
+        eves[i] = i;
     }
-    h_eff->Draw("bar1");
+    TCanvas *c1 = new TCanvas("image", "n4254", 40,40,800,600);
+    auto s_eff = new TScatter(500, eves, eff);
+    s_eff->SetTitle("Effeciency V.S Total events;Total events;Effeciency");
+    s_eff->SetMarkerColor(kRed);
+    s_eff->SetMarkerStyle(20);
+    s_eff->Draw("A");
+    c1->SaveAs("eff_sca_gra.png");
     return;
 }
