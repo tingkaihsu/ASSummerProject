@@ -4,6 +4,11 @@ This is the project containing all stuff in AS summer 2024
 We use python here, and in order to get permission to the remote device.
 Plz use 'sudo' to run the code!
 https://github.com/pyserial/pyserial/issues/124
+
+# How to install ROOT
+I think the snap method for installing ROOT is the most stable one, plz ref the official website to learn more.
+
+# ROOT drawing
 To create a `TTree` file with ROOT in Python where the data format is `1,95;2,4`, you will follow these steps. This example will walk you through creating a `TTree`, filling it with your data, and saving it to a file.
 
 ### 1. Import ROOT and Create a TFile
@@ -148,4 +153,17 @@ If you have more complex data formats or if you want to store multiple entries i
 - [ROOT Python Bindings Documentation](https://root.cern/manual/python/)
 - [ROOT User Guide](https://root.cern/manual/)
 
-Feel free to adjust the example code according to your specific data and requirements. If you have any additional questions or run into issues, let me know!
+# 7/26/2024
+Make sure the version of gcc is correct.
+Conda forge may cause problem.
+I uninstall conda-forge and renew the version of gcc.
+Commend
+```
+make
+```
+```
+sudo make install
+```
+and then the CAENVME driver and USB connection package are installed.
+Try to demo now.
+
