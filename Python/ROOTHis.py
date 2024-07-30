@@ -20,14 +20,14 @@ if hfile:
 hfile = TFile( 'channel.root', 'RECREATE', 'Use ROOT file with histograms to show Effeciency' )
  
 # Create some histograms, a profile histogram and an ntuple
-h_eff    = TH1F( 'eff', 'Distribution of Effeciency in every 500 secs', 100, 0, 1.2 )
-# h_eff    = TH1F( 'avg_part', 'Average Particles per Seconds', 100, 0, 0.15 )
+# h_eff    = TH1F( 'eff', 'Distribution of Effeciency in every 1200 secs', 100, 0, 1.2 )
+h_eff    = TH1F( 'avg_part', 'Average Particles in 1200 Seconds', 100, 40, 120 )
 # Set canvas/frame attributes.
 h_eff.SetFillColor( 48 )
  
 gBenchmark.Start( 'hsimple' )
 
-with open('data1.txt', 'r') as input:
+with open('data2.txt', 'r') as input:
   lines = input.readlines()
   ch1 = []
   ch2 = []
@@ -49,31 +49,36 @@ while (i < len(ch1)-1):
   if (ch1[i+1] != ch1[i]):
     eff.append((ch2[i+1] - ch2[i])/(ch1[i+1]-ch1[i]))
     # print((ch2[i+1] - ch2[i])/(ch1[i+1]-ch1[i]))
-    avg_part.append((ch1[i+1]-ch1[i])/(times[i+1]-times[i]))
+    avg_part.append((ch1[i+1]-ch1[i]))
   i += 1
     # print((ch2[i+1] - ch2[i])/(ch1[i+1]-ch1[i]))
 
-for j in range( len(eff) ):
-  if eff[j] <= 1:
-    px = eff[j]
-# Fill histograms.
-    h_eff.Fill( px )
-    h_eff.Draw()
-    c1.Modified()
-    c1.Update()
- 
-# for j in range( len(avg_part) ):
-#   px = avg_part[j]
+# for j in range( len(eff) ):
+#   if eff[j] <= 1:
+#     px = eff[j]
 # # Fill histograms.
-#   h_eff.Fill( px )
-#   h_eff.Draw()
-#   c1.Modified()
-#   c1.Update()
+#     h_eff.Fill( px )
+#     h_eff.Draw()
+#     c1.Modified()
+#     c1.Update()
+ 
+for j in range( len(avg_part) ):
+  px = avg_part[j]
+# Fill histograms.
+  h_eff.Fill( px )
+  h_eff.Draw()
+  c1.Modified()
+  c1.Update()
 
+avg = 0
+for k in range(len(times)-1):
+  avg += times[k+1] - times[k]
+avg /= len(times)
+print(avg/60.0)
 # Save all objects in this file.
 h_eff.SetFillColor( 0 )
 hfile.Write()
 h_eff.SetFillColor( 0 )
 c1.Modified()
 c1.Update()
-c1.SaveAs('eff_data1.png')
+c1.SaveAs('avg_part_data2.png')
