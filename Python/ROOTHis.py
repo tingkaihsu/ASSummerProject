@@ -1,6 +1,7 @@
-from ROOT import TCanvas, TFile, TProfile, TNtuple, TH1F, TH2F
+from ROOT import TCanvas, TFile, TProfile, TNtuple, TH1F, TH2F, TLegend, TF1, TMath
 from ROOT import gROOT, gBenchmark, gRandom, gSystem
 import ctypes
+import numpy as np
  
 # Create a new canvas, and customize it.
 c1 = TCanvas( 'c1', 'Dynamic Filling Example', 200, 10, 700, 500 )
@@ -59,26 +60,37 @@ while (i < len(ch1)-1):
 # # Fill histograms.
 #     h_eff.Fill( px )
 #     h_eff.Draw()
-#     c1.Modified()
-#     c1.Update()
- 
+#     c2.Modified()
+#     c2.Update()
+max = 0
 for j in range( len(avg_part) ):
   px = avg_part[j]
+  if (max < px):
+    max = px
 # Fill histograms.
   h_eff.Fill( px )
-  h_eff.Draw()
-  c1.Modified()
-  c1.Update()
+  # h_eff.Draw()
+  # c1.Modified()
+  # c1.Update()
+  # c2.SaveAs('avg_part1_data2.png')
 
 avg = 0
 for k in range(len(times)-1):
   avg += times[k+1] - times[k]
 avg /= len(times)
 print(avg/60.0)
-# Save all objects in this file.
-h_eff.SetFillColor( 0 )
+
 hfile.Write()
-h_eff.SetFillColor( 0 )
+h_eff_c = h_eff.GetCumulative()
+h_eff_c.SetStats(0)
+# h_eff_c.Draw()
+
+f1 = TF1("f1", "[0]*TMath::Poisson(x, 74.92)", 40, 120)
+f1.SetParameter(10, 10)
+h_eff.Fit("f1", "R")
+h_eff.Draw()
+# f1.Draw("SAME")
+
 c1.Modified()
 c1.Update()
-c1.SaveAs('avg_part_data2.png')
+c1.SaveAs('avg_part_data_fit.png')
