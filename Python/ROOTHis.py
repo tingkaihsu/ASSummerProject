@@ -1,8 +1,12 @@
 from ROOT import TCanvas, TFile, TProfile, TNtuple, TH1F, TH2F, TLegend, TF1, TMath
 from ROOT import gROOT, gBenchmark, gRandom, gSystem
-import ctypes
+# import ctypes
 import numpy as np
-def DrawHis(filepath, hisname, interval, savefile):
+def func(x):
+  return np.sin(x[0])
+
+def DrawHis(filepath, hisname, interval):
+  savefile = hisname + "_" + interval + ".png"
   with open(filepath, 'r') as input:
     lines = input.readlines()
     ch1 = []
@@ -77,6 +81,13 @@ def DrawHis(filepath, hisname, interval, savefile):
     for j in range( len(avg_part) ):
       bin = avg_part[j]
       h.Fill( bin )
+  
+  #set bin error
+  for i in range(h.GetNbinsX()):
+    err = 1 + np.sqrt(h.GetBinContent(i)-0.75) + np.sqrt(h.GetBinContent(i)+0.25)
+    if not np.isnan(err) or err == 0:
+      print(err)
+      h.SetBinError(i, err/2.0)
 
   avg = 0
   for k in range(len(times)-1):
@@ -88,17 +99,20 @@ def DrawHis(filepath, hisname, interval, savefile):
   h_c = h.GetCumulative()
   h_c.SetStats(0)
   avg_part_arr = np.array(avg_part)
-  h.Draw()
+  h.Draw("Ebar")
   if hisname != 'eff':
     avg = np.average(avg_part_arr)
     print("avg: ", avg)
-    f1 = TF1("f1", "[0]*TMath::Poisson(x, 74)", lower, upper)
+    if interval == "600":
+      f1 = TF1("f1", "[0]*TMath::Poisson(x, 39.13)", lower, upper)
+    else:
+      f1 = TF1("f1", "[0]*TMath::Poisson(x, 74.59)", lower, upper)
+    # f1 = TF1("f1", func, lower, upper)
     f1.SetParameter(10, 10)
     h.Fit("f1", "R")
-    # f1.Draw("SAME")
 
   c1.Modified()
   c1.Update()
   c1.SaveAs(savefile)
 
-DrawHis("data2.txt", "avg_part", "1200", "eff_funct.png")
+DrawHis("data1.txt", "avg_part", "600")
