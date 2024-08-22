@@ -66,11 +66,13 @@ def DrawHis(filepath, hisname, interval):
   if hisname == 'eff':
     title = "Efficiency in every " + interval + " secs"
   else:
-    title = "Average Particles in " +  interval + " secs"
+    title = "Distribution of Arrivals of Cosmic Rays in Scintillator every " +  interval + " secs"
   h = TH1F(hisname, title, 100, lower, upper)
   # Set canvas/frame attributes.
   h.SetFillColor( 48 )
-  
+  h.GetXaxis().SetTitle("Arrivals of Cosmic Rays")
+  h.GetYaxis().SetTitle("times")
+
   gBenchmark.Start( 'hsimple' )
   if hisname == 'eff':
     for j in range( len(eff) ):
@@ -115,4 +117,4 @@ def DrawHis(filepath, hisname, interval):
   c1.Update()
   c1.SaveAs(savefile)
 
-DrawHis("data1.txt", "avg_part", "600")
+DrawHis("data2.txt", "avg_part", "1200")
